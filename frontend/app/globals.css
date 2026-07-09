@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* 라이트 모드 기본 배경/텍스트 */
+body {
+  @apply bg-zinc-50 text-zinc-900 antialiased;
+}
+
+/* 다크 모드 */
+.dark body {
+  @apply bg-zinc-950 text-zinc-100;
+}
+
+/* 얇은 스크롤바 */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-zinc-300 rounded-full;
+}
+.dark ::-webkit-scrollbar-thumb {
+  @apply bg-zinc-700;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
