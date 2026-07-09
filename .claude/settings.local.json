@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(node -v)",
+      "PowerShell(npm -v)",
+      "WebSearch",
+      "WebFetch(domain:feature-sliced.design)",
+      "WebFetch(domain:techblog.woowahan.com)",
+      "WebFetch(domain:artsy.github.io)",
+      "WebFetch(domain:global.moneyforward-dev.jp)",
+      "PowerShell(Set-Location \"c:\\\\Users\\\\tkdgn\\\\Desktop\\\\사이드\\\\cotejs\\\\frontend\"; $env:PORT=3000; npm run dev)"
+    ]
+  }
+}
