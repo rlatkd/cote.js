@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Sparkles, ShieldCheck, Gauge, Trophy } from "lucide-react";
 import { acceptanceRate, type Problem } from "@/entities/problem/model";
-import DifficultyBadge from "@/shared/ui/DifficultyBadge";
+import DifficultyBadge from "@/entities/problem/ui/DifficultyBadge";
 
 export default function HomeView({ problems }: { problems: Problem[] }) {
   const recent = problems.slice(0, 5);

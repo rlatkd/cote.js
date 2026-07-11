@@ -1,4 +1,4 @@
-import type { JudgeResult } from "@/entities/submission/model";
+import type { JudgeResult } from "../model";
 
 const styles: Record<JudgeResult, string> = {
   "맞았습니다":

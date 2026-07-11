@@ -10,7 +10,7 @@ import {
   type Problem,
 } from "@/entities/problem/model";
 import { useProblemSolving } from "@/entities/problem/use-problem-solving";
-import DifficultyBadge from "@/shared/ui/DifficultyBadge";
+import DifficultyBadge from "@/entities/problem/ui/DifficultyBadge";
 
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
   ssr: false,

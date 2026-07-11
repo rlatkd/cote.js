@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Submission } from "@/entities/submission/model";
-import StatusBadge from "@/shared/ui/StatusBadge";
+import StatusBadge from "@/entities/submission/ui/StatusBadge";
 
 export default function SubmissionStatusView({
   submissions,

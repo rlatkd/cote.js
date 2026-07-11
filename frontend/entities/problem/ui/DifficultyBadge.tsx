@@ -1,4 +1,4 @@
-import type { Difficulty } from "@/entities/problem/model";
+import type { Difficulty } from "../model";
 
 const styles: Record<Difficulty, string> = {
   Bronze:

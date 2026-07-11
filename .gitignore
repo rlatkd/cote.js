@@ -1,0 +1,26 @@
+# Claude 로컬 설정
+.claude
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+
+# 환경변수
+.env
+.env*.local
+
+# 로그
+*.log
+npm-debug.log*
+
+# 의존성 / 빌드 산출물 (각 서비스도 자체 ignore 보유)
+node_modules/
+dist/
+build/
+.next/
