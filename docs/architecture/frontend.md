@@ -33,21 +33,25 @@ frontend/
 │  └─ status/page.tsx            # 채점 현황 → views/submission-status
 ├─ views/                        # 화면 조합
 │  ├─ home/
-│  ├─ problem-list/
+│  ├─ problem-list/              # 검색·난이도·AI 필터 (client island)
 │  ├─ problem-solving/           # 통합 split view + Monaco (client)
 │  └─ submission-status/
 ├─ entities/                     # 도메인 모듈
 │  ├─ problem/
 │  │  ├─ model.ts                # Problem 타입·도메인 로직(acceptanceRate 등)
 │  │  ├─ api.ts                  # Repository (현재 mock, 이후 Backend API)
-│  │  └─ use-problem-solving.ts  # ViewModel (에디터·채점 상태 훅)
+│  │  ├─ use-problem-solving.ts  # ViewModel (에디터·채점 상태 훅)
+│  │  └─ ui/DifficultyBadge.tsx  # 도메인 전용 UI (난이도 뱃지)
 │  └─ submission/
 │     ├─ model.ts
-│     └─ api.ts
+│     ├─ api.ts
+│     └─ ui/StatusBadge.tsx      # 도메인 전용 UI (채점 상태 뱃지)
 ├─ shared/
-│  └─ ui/                        # Navbar, ThemeToggle, DifficultyBadge, StatusBadge
+│  └─ ui/                        # 도메인 무관 공용 (Navbar, ThemeToggle)
 └─ ...config
 ```
+
+> **의존성 규칙은 ESLint로 강제**한다(`import/no-restricted-paths`, [`.eslintrc.json`](../../frontend/.eslintrc.json)). 도메인 전용 UI(난이도·상태 뱃지)는 `shared`가 아니라 해당 `entities`에 둔다 — `shared`가 `entities`를 참조하면 역방향 위반이라 lint 에러가 난다.
 
 ## 데이터 흐름 (RSC 방침)
 
