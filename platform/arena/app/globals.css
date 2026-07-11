@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * "Instrument" 디자인 시스템 — 정밀 계기 컨셉.
+ * 색은 전부 여기서 결정한다(단일 진실원). "R G B" 채널 저장 → <alpha-value> 결합.
+ * 라이트 기본. 헤어라인 구조 + 시그널 앰버. 다크는 토글(.dark).
+ */
+:root {
+  color-scheme: light dark;
+
+  /* light (기본) — 캔버스(bg)를 살짝 낮춰 흰 surface 패널이 뜨도록 3단 위계 확보 */
+  --bg: 250 250 250; /* 미세 그레이 캔버스 */
+  --surface: 255 255 255; /* 흰 카드 — 캔버스 위로 떠 보임 */
+  --elevated: 244 244 245; /* 그레이 인셋(코드·예제 박스) — 캔버스 아래로 가라앉음 */
+  --border: 224 224 227;
+  --border-strong: 196 196 200;
+  --fg: 12 12 13;
+  --muted: 99 99 105; /* 흰 위 대비 보강(≈4.6:1) */
+  --faint: 148 148 154; /* ID 등 — 가독 위해 소폭 진하게 */
+  --brand: 194 88 0; /* 라이트에선 톤을 낮춰 가독 확보 */
+  --brand-hover: 164 74 0;
+  --brand-ink: 255 255 255; /* 앰버 위 텍스트 */
+
+  --ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.dark {
+  --bg: 10 10 10; /* #0a0a0a 순수 근-검정(zinc의 푸른기 제거) */
+  --surface: 20 20 20; /* #141414 */
+  --elevated: 28 28 28; /* #1c1c1c */
+  --border: 42 42 42; /* #2a2a2a 중립 헤어라인 */
+  --border-strong: 64 64 64; /* #404040 */
+  --fg: 245 245 245;
+  --muted: 138 138 138;
+  --faint: 88 88 88;
+  --brand: 255 138 0; /* #ff8a00 시그널 앰버 */
+  --brand-hover: 255 162 46;
+  --brand-ink: 10 10 10; /* 앰버 위 텍스트 = 근-검정 */
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-bg text-fg font-sans antialiased;
+  }
+
+  /* 키보드 포커스 — 계기답게 소프트 글로우 없이 크리스프한 앰버 라인 */
+  :focus-visible {
+    @apply outline-none;
+    box-shadow: 0 0 0 1px rgb(var(--bg)), 0 0 0 2px rgb(var(--brand));
+  }
+}
+
+@layer components {
+  /* 스펙시트형 마이크로 라벨 — 대문자·자간·모노. 시스템 전역에서 재사용 */
+  .mono-label {
+    @apply font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-muted;
+  }
+}
+
+/* 헤어라인 그리드 텍스처 — 히어로 등 계기판 배경에 아주 은은하게 */
+.grid-texture {
+  background-image: linear-gradient(
+      to right,
+      rgb(var(--border) / 0.5) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgb(var(--border) / 0.5) 1px, transparent 1px);
+  background-size: 40px 40px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+}
+
+/* 스크롤바 — 계기답게 가늘고 각지게 */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-border;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-border-strong;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}

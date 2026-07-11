@@ -1,6 +1,6 @@
 # 0001. 기술 스택 선정
 
-- **상태**: Accepted
+- **상태**: Accepted (Backend API 항목은 [0005](0005-backend-language-and-type-sharing.md)로 대체됨)
 - **일자**: 2026-07-09
 
 ## 맥락
@@ -12,7 +12,7 @@
 | 영역 | 확정 |
 |---|---|
 | Frontend | Next.js + TypeScript + Tailwind(직접) + Monaco Editor |
-| Backend API | Kotlin + Spring Boot |
+| Backend API | ~~Kotlin + Spring Boot~~ → **TypeScript + NestJS + Prisma** ([0005](0005-backend-language-and-type-sharing.md)) |
 | 문제 생성 | LLM API + LangChain |
 | 임베딩(유사도) | 자체 Sentence Transformer (PyTorch / HuggingFace) |
 | Vector 검색 | pgvector |
@@ -28,7 +28,7 @@
 - **문제 생성 = LLM API**: 자체 모델 파인튜닝은 데이터·GPU·품질 확보가 범용 LLM 대비 이점이 없음. 대신 LangChain 오케스트레이션 학습에 집중.
 - **임베딩 = 자체 모델**: Sentence Transformer는 소형이라 로컬 구동 가능. PyTorch/HuggingFace 생태계를 실제로 학습하는 지점. → 생성=API, 임베딩=자체 모델의 "하이브리드"가 학습 폭과 현실성을 동시에 확보.
 - **pgvector**: 메인 DB(PostgreSQL)와 통합되어 별도 벡터 인프라 불필요.
-- **Kotlin**: JVM 계열이라 사용자의 Java 경험이 전이되면서 신규 언어 학습.
+- ~~**Kotlin**: JVM 계열이라 사용자의 Java 경험이 전이되면서 신규 언어 학습.~~ → 재검토 결과 실무(Java+Spring)와 겹쳐 학습 신규성이 낮다고 판단, [0005]에서 NestJS로 전환.
 - **Go Judge 자체 구현**: 샌드박스·격리를 밑바닥부터 학습(가장 깊은 경험).
 
 ## 검토한 대안

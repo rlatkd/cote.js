@@ -2,6 +2,8 @@
 
 > **프로젝트 성격**: 넓은 기술 스택을 단계적으로 학습·구현하기 위한 아키텍처 청사진입니다.
 > 모든 컴포넌트를 한 번에 구축하지 않고, 아래 [16. 마일스톤](#16-마일스톤단계적-구현-로드맵)의 우선순위에 따라 세로 슬라이스 단위로 구현합니다.
+>
+> **로컬 실행법**: [RUN.md](RUN.md)
 
 ## 1. 프로젝트 개요
 
@@ -76,10 +78,10 @@
       |                   |
       v                   v
 +----------------------+    +---------------------------+
-| Frontend             |    | Backend API Server        |
-| Next.js              |    | Kotlin + Spring Boot      |
-| TypeScript           |    | Spring Security           |
-| Monaco Editor        |    | Spring Data JPA           |
+| Frontend (arena)     |    | Backend API (hub)         |
+| Next.js              |    | TypeScript + NestJS       |
+| TypeScript           |    | Prisma (ORM)              |
+| Monaco Editor        |    | 공유 타입 @cotejs/contracts |
 +----------------------+    +---------------------------+
                                   |
                                   v
@@ -316,12 +318,15 @@ Human Review Gate (승인 시에만 공개)
 
 | 구분 | 기술 |
 |---|---|
-| Language | Kotlin |
-| Framework | Spring Boot |
-| ORM | Spring Data JPA |
-| Security | Spring Security |
+| Language | TypeScript |
+| Framework | NestJS |
+| ORM | Prisma |
+| 입력 검증 | zod (`@cotejs/contracts` 공유 스키마) |
+| Security | (예정) — 인증/인가 후속 |
 | Database | PostgreSQL |
 | Cache | Redis |
+
+> 백엔드 언어를 Kotlin+Spring → NestJS로 재선정하고, 프론트(arena)와 타입을 공유한다(짝 A). 근거: [ADR-0005](docs/decisions/0005-backend-language-and-type-sharing.md).
 
 
 # 9. Judge System
@@ -429,7 +434,7 @@ Database 저장
 | 영역 | 기술 |
 |---|---|
 | Frontend | Next.js + TypeScript |
-| Backend API | Kotlin + Spring Boot |
+| Backend API | TypeScript + NestJS + Prisma |
 | AI Service | Python + FastAPI |
 | 문제 생성 | LLM API + LangChain |
 | 임베딩/NLP | Sentence Transformer (PyTorch / HuggingFace, 자체 구동) |
@@ -447,6 +452,7 @@ Database 저장
 
 | 결정 | 채택 | 배제/보류 | 이유 |
 |---|---|---|---|
+| Backend API | TypeScript + NestJS | Kotlin+Spring, Go | 실무(Java+Spring)와 차별화 + 프론트와 타입 공유(짝 A) + VSCode DX |
 | 문제 생성 | LLM API | 자체 모델 파인튜닝 | 데이터·GPU·품질 확보 난이도가 과함 |
 | 임베딩 | 자체 Sentence Transformer | 임베딩 API | ML 생태계 실제 학습 목적 |
 | 벡터 저장 | pgvector | FAISS / Milvus | PostgreSQL로 통합, 인프라 최소화 |
@@ -478,7 +484,7 @@ Database 저장
 
 | 단계 | 목표 | 범위 |
 |---|---|---|
-| **M1** | 온라인 채점 코어 | Next.js + Kotlin/Spring + PostgreSQL, 수기 등록 문제, Go Judge + Docker Sandbox(격리), 동기 채점 |
+| **M1** | 온라인 채점 코어 | Next.js(arena) + NestJS(hub) + PostgreSQL, 수기 등록 문제, Go Judge + Docker Sandbox(격리), 동기 채점 |
 | **M2** | 비동기 채점 | Kafka 도입, Judge Worker 분리, 제출량 처리 |
 | **M3** | AI 생성 파이프라인 | LLM API + LangChain 생성, 사람 검수 게이트 |
 | **M4** | 유사도/품질 검증 | 자체 임베딩 + pgvector 유사도, 정답 교차검증 자동화 |

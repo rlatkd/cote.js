@@ -50,7 +50,8 @@
 | 영역 | 확정 | 배제/보류 |
 |---|---|---|
 | Frontend | Next.js + TypeScript + Tailwind(직접) + Monaco Editor | — |
-| Backend API | Kotlin + Spring Boot | Java |
+| Backend API | **TypeScript + NestJS + Prisma** (PostgreSQL) | Kotlin+Spring, Java, Go, TypeORM |
+| 프론트·백 타입 공유 | **짝 A** — `@cotejs/contracts`(타입+zod) 공유. 폴리글랏 경계는 IDL(Protobuf/OpenAPI) | — |
 | 문제 생성 | LLM API + LangChain | 자체 모델 파인튜닝, LlamaIndex |
 | 임베딩(유사도) | 자체 Sentence Transformer (PyTorch / HuggingFace) | 임베딩 API |
 | Vector 검색 | pgvector | FAISS / Milvus |
@@ -64,17 +65,17 @@
 ### POC 범위 / 디자인
 
 - 백준식 다중 페이지 구조(홈 / 문제 목록 / 문제 상세 / 채점 현황) + **리트코드식 통합 split view**(문제 상세 안에 좌:지문 / 우:Monaco 에디터 + 결과).
-- 백준의 낡은 외관 대신 **현대적 비주얼**(미니멀·타이포·다크). 다크 모드 기본 + 라이트 토글.
+- 백준의 낡은 외관 대신 **현대적 비주얼**(미니멀·타이포). **라이트 모드 기본 + 다크 토글**.
 
 ### 아키텍처 (일부 진행 중)
 
 - **프론트엔드**: **확정** — 자체 정의 도메인 레이어드(`app` 라우팅 → `views` 화면 → `entities` 도메인 → `shared` 공용, 단방향 의존) + MVVM(entities의 훅=ViewModel) + Server Actions. RSC는 정적 화면만 부분 적용(인터랙션은 client island). 배민·Money Forward 실무 사례 기반. 상세: [ADR-0004](docs/decisions/0004-frontend-architecture.md), [architecture/frontend.md](docs/architecture/frontend.md).
-- **백엔드(Kotlin)**: (잠정) Hexagonal.
+- **백엔드(hub / NestJS)**: **확정(진행 중)** — 모듈 단위 레이어드(Controller → Service → PrismaService=Repository 경계), zod로 입력 검증, `@cotejs/contracts` 타입 공유. 상세: [ADR-0005](docs/decisions/0005-backend-language-and-type-sharing.md), [architecture/hub.md](docs/architecture/hub.md).
 - **AI(Python/FastAPI)**: (잠정) Layered + LangChain 체인 모듈 분리.
 - **Judge(Go)**: (잠정) 경량 클린 (`cmd/` + `internal/`: consumer·executor·sandbox 어댑터).
 
-### 모노레포 구조
+### 모노레포 구조 (확정 — [ADR-0003](docs/decisions/0003-monorepo-structure.md))
 
-- 폴리글랏 모노레포, **서비스별 최상위 폴더**로 분해. 프론트엔드 폴더명 = `frontend` (확정, 잠정).
-- Turborepo `apps/packages`는 JS 전용이라 폴리글랏엔 부적합 → 미채택.
-- 나머지 서비스 폴더명·전체 컨벤션은 추후 재논의(노트 TODO).
+- 폴리글랏 루트 밑에 **`platform/` 그룹**(TS 워크스페이스)을 두고 그 안에 `arena`(Next)·`hub`(NestJS)·`contracts`(공유 타입). Go/Python 서비스는 루트 직속 형제.
+- **서비스명 = 역할 도메인 용어**: `arena`(프론트)·`hub`(백엔드)·`judge`(채점, Go)·`setter`(생성)·`scout`(유사도)·`tester`(검증). "frontend/backend" 같은 계층명 배제.
+- `contracts`는 TS 짝 전용 공유 라이브러리(Turborepo 전체 컨벤션 배제와 무관). 폴리글랏 경계 계약은 IDL.

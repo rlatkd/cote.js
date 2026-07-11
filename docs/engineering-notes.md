@@ -7,6 +7,27 @@
 
 ## 진행 중 논의 (Deliberation Log)
 
+### 백엔드 재선정 + 프론트·백 타입 공유 + 서비스 네이밍 (2026-07-11) → ✅ [ADR-0005](decisions/0005-backend-language-and-type-sharing.md), [ADR-0003](decisions/0003-monorepo-structure.md) 갱신
+
+**계기**: 백엔드 착수 시점에 [ADR-0001]의 Kotlin+Spring을 재검토. 사용자 제기: "VSCode에서 작업하기 좋은 NestJS나 Go 등"으로 대체 가능한가.
+
+**핵심 진단**: 사용자 실무가 **Java+Spring**이라 Kotlin+Spring은 언어만 다르고 패러다임·생태계 동일 → **학습 신규성·포트폴리오 차별화 최저**. 프로젝트 목표(넓은 신규 학습)와 충돌. + Kotlin VSCode 지원은 2025년 JetBrains 공식 LSP가 나왔으나 아직 초기라 TS/Go/Rust 툴링에 못 미침(웹검색 확인). → 사용자의 Kotlin 의심이 타당.
+
+**"언어로 묶기" 축 (사용자 통찰)**: 백엔드는 언어 하나라, 어느 이웃과 묶느냐의 선택.
+- **짝 A** = 프론트(arena)+백(hub) 같은 TS → `contracts`로 타입 공유. 코딩테스트는 제품이라 이 경계가 가장 자주 바뀜 → 이득 매일 발생.
+- **짝 B** = 백+judge 같은 Go → Kafka 계약 공유. but 무거운 비즈니스 도메인엔 Go 적합성 약함 + Go 2개.
+- 결론: **짝 A 채택**. 폴리글랏 경계(hub↔judge/AI)는 같은 언어로 못 묶으니 IDL(Protobuf/OpenAPI)로.
+
+**JS 백엔드 후보**: NestJS(구조·DI·Spring 지식 전이) / AdonisJS(신규성 최대) / Fastify(자체 레이어드 일관) / Hono·Elysia(경량) 비교. → **NestJS**(전이+성숙도). ORM은 **Prisma**(타입세이프, 짝 A 테마 일관; TypeORM은 JPA 전이 크나 배제).
+
+**폴더 구조 논의**: 초기 제안(루트=JS 워크스페이스 + `packages/contracts`)을 사용자가 반려 — "루트를 통째로 JS 워크스페이스로 만들지 말고 계층을 하나 더 둬서 공유". → **`platform/` 그룹**(TS 워크스페이스)을 루트 밑에 두고 arena·hub·contracts 격리. Go/Python은 루트 직속. 교훈: 폴리글랏 루트에 JS 도구를 얹지 않는다.
+
+**서비스 네이밍**: 사용자 제기 "frontend/backend는 진부, judge처럼 역할이 드러나는 명칭". → 경쟁 프로그래밍 **실제 도메인 용어**로 통일: `arena`(경기장)·`hub`(중심)·`judge`(채점)·`setter`(출제)·`scout`(중복 정찰)·`tester`(검증). 파이프라인이 폴더명으로 읽힘. 트레이드오프(초견 인지비용)는 glossary·README 서비스맵으로 해소. 교훈: 억지 작명이 아니라 도메인 authentic 용어라 방어 가능.
+
+**구현 결과(검증됨)**: `contracts` 빌드 → hub(Prisma+Postgres, seed 7문제·10제출) → GET/POST(zod)/404/400 curl 통과 → arena `next build` + 실런타임 렌더(hub 데이터가 HTML 반영, 5라우트 200). 실제 채점은 stub("채점 중")로 남기고 Judge(Go) 마일스톤으로 이월.
+
+**남은 것**: 인증/인가, 데이터 모델 수치화(ms·MB), 페이지네이션, hub→judge Kafka 계약(IDL).
+
 ### 디자인 시스템 — LLM median UI 탈출 (2026-07-11) → ✅ 1차 도입 ([architecture/frontend-design-system.md](architecture/frontend-design-system.md))
 
 **문제 제기**: LLM으로 만든 POC UI는 어떤 모델이든 같은 인상(다크 미니멀, 테두리 둥근 박스 반복, 제네릭 블루, 시스템 폰트)으로 수렴한다. "이게 실제 괜찮은 건가, 아니면 초보 티인가?"
@@ -43,6 +64,16 @@
 **결정 근거(앰버)**: 개발자 도구는 죄다 파랑·보라·초록 → 따뜻한 액센트가 희소해 기억에 남음(차별화). CRT 터미널 앰버 계보 = "Instrument" 컨셉과 논리적 연결. 근-검정 위 발광. 성공(초록)/실패(빨강)와 안 부딪힘. 트레이드오프(따뜻함이 근엄함을 살짝 깎음, 라이트모드 가독 약함)는 인지하되 다크우선이라 수용.
 
 **적용 범위(완료)**: 디자인 시스템 전면 교체(순수 뉴트럴 캔버스·각진 borderRadius 스케일·brand-ink 토큰·mono-label·grid-texture·blink) + 5개 화면 전부(홈 계기판, 목록/현황 계기 테이블, 문제풀이 split view, 네비 터미널 워드마크) + 배지(도트+모노). `next build` 통과, 5라우트 200.
+
+#### 후속 — 기본 테마 다크→라이트 전환 (2026-07-11)
+
+**계기**: 사용자가 라이트 모드를 선호("일반 모드가 좋다", 주황 액센트는 유지). 기본이 다크로 박혀 있는 걸 별로라고 판단.
+
+**결정**: 기본 테마를 **라이트로 전환**(다크는 토글 유지). [layout.tsx](../../platform/arena/app/layout.tsx) themeScript를 `localStorage.theme==='dark'`일 때만 다크로 반전, [ThemeToggle](../../platform/arena/shared/ui/ThemeToggle.tsx) 초기값 `false`.
+
+**라이트 보정**: 라이트 팔레트가 `bg`·`surface` 모두 순백(255)이라 패널이 배경과 안 갈라지는 문제 → `bg`를 미세 그레이(250)로 낮춰 흰 surface가 뜨고 그레이 elevated(244)가 가라앉는 **3단 위계**를 라이트에도 확보. `muted`/`faint`/`brand` 대비도 소폭 보강.
+
+**메모**: 앰버 액센트는 원래 다크에서 먼저 설계됐고(엔지니어링 노트 상단 '앰버 결정' 참고, "라이트 가독 약함"을 트레이드오프로 인지) 다크 우선으로 문서화됐었다. 이번에 기본을 라이트로 뒤집으며 ADR-0002·CLAUDE.md·디자인시스템 문서의 '다크 기본/다크 우선' 표기를 정정. 팔레트 자체는 양 모드 모두 유지.
 
 ### 프론트엔드 코드 아키텍처 — ✅ 결정됨: (C) 자체 도메인 레이어드 ([ADR-0004](decisions/0004-frontend-architecture.md) Accepted)
 

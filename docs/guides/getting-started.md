@@ -1,28 +1,25 @@
 # 시작하기
 
-현재 실행 가능한 서비스는 **프론트엔드 POC**뿐이다(mock 데이터). 다른 서비스는 아직 미구현.
+현재 실행 가능한 것: **arena(Next 프론트) · hub(NestJS API) · Postgres(도커)**. 문제·제출을 실제 DB에서 서빙한다(채점은 stub — Judge 마일스톤 예정).
 
 ## 사전 요구
 
 - Node.js 18.17+ (권장 20+ / 개발 환경 22)
 - pnpm 10+ (개발 환경 11)
+- Docker + Docker Compose (Postgres 구동)
 
-## 프론트엔드 POC 실행
+## 실행
 
-```bash
-cd frontend
-pnpm install
-pnpm dev          # 서버가 뜨면 자동으로 브라우저를 연다(opener.js)
-# pnpm dev:no-open  # 브라우저 자동 오픈 없이
-```
+서버 켜는 명령은 **[/RUN.md](../../RUN.md)** 에 한 줄씩 정리돼 있다(최초 세팅 + Postgres/hub/arena).
 
-- 개발 서버: http://localhost:3000
-- 데이터: `entities/*/api.ts` 목업 (백엔드 불필요)
+- arena: http://localhost:3000
+- hub: http://localhost:4000/api
+- 데이터: hub가 Postgres에서 서빙. arena의 `entities/*/api.ts`가 `HUB_URL`(기본 `localhost:4000`)로 fetch.
 - 코드 에디터(Monaco)는 기본 설정상 CDN에서 로드되므로 최초 실행 시 인터넷 연결 필요.
 
-> **pnpm 빌드 스크립트 승인**: 네이티브 의존성 `unrs-resolver`가 postinstall 빌드를 필요로 한다. [`pnpm-workspace.yaml`](../../frontend/pnpm-workspace.yaml)의 `allowBuilds.unrs-resolver: true`로 이미 승인돼 있다(값이 비어 있으면 `ERR_PNPM_IGNORED_BUILDS`로 `pnpm dev`가 실패).
+> **pnpm 빌드 스크립트 승인**: 네이티브 의존성(`unrs-resolver`, `@prisma/*` 등)이 postinstall 빌드를 필요로 한다. [`platform/package.json`](../../platform/package.json)의 `pnpm.onlyBuiltDependencies`로 승인돼 있다(누락 시 `ERR_PNPM_IGNORED_BUILDS` 또는 Prisma 엔진 미설치).
 
-## 페이지
+## 페이지 (arena)
 
 | 경로 | 화면 |
 |---|---|
@@ -31,8 +28,8 @@ pnpm dev          # 서버가 뜨면 자동으로 브라우저를 연다(opener.
 | `/problems/[id]` | 문제 상세 (통합 split view + 에디터) |
 | `/status` | 채점 현황 |
 
-> 채점·실행은 POC 단계라 실제 실행이 아니라 목업 결과를 지연 표시한다.
+> 문제 지문·목록·제출 현황은 hub(실 DB)에서 온다. 단, 에디터의 **실행/제출 채점은 아직 stub**(실제 코드 실행은 Judge 마일스톤).
 
 ## 다음 단계
 
-프론트 아키텍처 확정 후 `frontend/` 재배치 → 나머지 페이지 구현 → 이후 마일스톤([TODO](../TODO.md)).
+hub 후속(인증·랭킹·페이지네이션) 및 제출→judge(Kafka) 연결 → 이후 마일스톤([TODO](../TODO.md)).

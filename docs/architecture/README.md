@@ -7,11 +7,12 @@
 | 문서 | 내용 |
 |---|---|
 | [system-overview.md](system-overview.md) | 전체 시스템 구성·서비스·데이터 흐름 |
-| [frontend.md](frontend.md) | 프론트엔드 내부 아키텍처 (Active) |
+| [frontend.md](frontend.md) | arena(프론트) 내부 아키텍처 (Active) |
 | [frontend-design-system.md](frontend-design-system.md) | 프론트 디자인 시스템 — 색 토큰·서체·표면 위계·모션·접근성 (Active) |
+| [hub.md](hub.md) | hub(NestJS 백엔드) 아키텍처 — 레이어·모듈·contracts 경계 (Active) |
 | [_template.md](_template.md) | 서비스 아키텍처 문서 템플릿 |
 
 ## 방침
 
 - 서비스별 상세 아키텍처 문서는 **해당 서비스를 착수할 때** 생성한다(빈 껍데기 미리 만들지 않음).
-- 예정: `backend-api.md`, `ai-generation.md`, `ai-similarity.md`, `ai-validator.md`, `judge.md`.
+- 예정: `judge.md`, `setter.md`, `scout.md`, `tester.md` (서비스 네이밍은 [ADR-0003](../decisions/0003-monorepo-structure.md) 참고).

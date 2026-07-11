@@ -19,7 +19,7 @@ LLM 기본 UI(median)의 세 tell — ① 라운드 박스 반복 ② 제네릭 
 
 ## 색 토큰 (Single Source of Truth)
 
-색 값은 [`app/globals.css`](../../frontend/app/globals.css)의 CSS 변수(`:root`=라이트, `.dark`=다크)만 소유. [`tailwind.config.ts`](../../frontend/tailwind.config.ts)는 시맨틱 이름→변수 매핑만. **다크 우선(dark-first).**
+색 값은 [`app/globals.css`](../../platform/arena/app/globals.css)의 CSS 변수(`:root`=라이트, `.dark`=다크)만 소유. [`tailwind.config.ts`](../../platform/arena/tailwind.config.ts)는 시맨틱 이름→변수 매핑만. **라이트 기본, 다크는 토글**(2026-07-11 전환 — 팔레트는 앰버 액센트를 다크에서 먼저 설계했으나 기본 테마는 라이트로, 라이트 bg/surface 위계 보정).
 
 | 토큰 | 역할 | 라이트 | 다크 |
 |---|---|---|---|
@@ -40,7 +40,7 @@ LLM 기본 UI(median)의 세 tell — ① 라운드 박스 반복 ② 제네릭 
 ## 기하 · 타입
 
 - **borderRadius 스케일을 각지게 재정의**(sm 1px / DEFAULT·md·lg 2px / xl 3px). `rounded-*` 클래스를 그대로 써도 전부 각짐. 도트·원만 `rounded-full`.
-- **서체**([`app/fonts.ts`](../../frontend/app/fonts.ts), `next/font` 셀프 호스팅): UI/구조=**JetBrains Mono**, 읽는 글=**Pretendard**. 수치는 `font-mono tabular-nums`.
+- **서체**([`app/fonts.ts`](../../platform/arena/app/fonts.ts), `next/font` 셀프 호스팅): UI/구조=**JetBrains Mono**, 읽는 글=**Pretendard**. 수치는 `font-mono tabular-nums`.
 - **스펙시트 라벨**: 재사용 유틸 `.mono-label`(globals.css `@layer components`) = 대문자·자간 `0.14em`·11px 모노. 섹션 헤더·통계 라벨·테이블 헤더 전역에서 사용. **주의**: 커스텀 컴포넌트 클래스라 `[&>th]:mono-label` 식 arbitrary variant는 안 먹음 → 그럴 땐 실제 유틸리티를 나열한다.
 
 ## 시그니처 모티프

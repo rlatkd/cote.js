@@ -13,7 +13,8 @@
 
 | # | 제목 | 상태 |
 |---|---|---|
-| [0001](0001-tech-stack.md) | 기술 스택 선정 | Accepted |
+| [0001](0001-tech-stack.md) | 기술 스택 선정 | Accepted (Backend 항목 0005로 대체) |
 | [0002](0002-poc-scope-and-design.md) | POC 범위 및 디자인 방향 | Accepted |
-| [0003](0003-monorepo-structure.md) | 모노레포 폴더 구조 | Accepted (일부 잠정) |
+| [0003](0003-monorepo-structure.md) | 모노레포 폴더 구조 | Accepted (platform 그룹·네이밍 확정) |
 | [0004](0004-frontend-architecture.md) | 프론트엔드 코드 아키텍처 | Accepted |
+| [0005](0005-backend-language-and-type-sharing.md) | 백엔드 언어 재선정 + 프론트·백 타입 공유(짝 A) | Accepted |

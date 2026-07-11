@@ -4,7 +4,7 @@
 
 ## 공통
 
-- 각 서비스는 자기 언어의 표준 포매터/린터를 따른다 (TS: ESLint+Prettier, Kotlin: ktlint, Python: ruff/black, Go: gofmt).
+- 각 서비스는 자기 언어의 표준 포매터/린터를 따른다 (TS: ESLint+Prettier, Python: ruff/black, Go: gofmt).
 - 문서·주석·커밋 메시지는 한국어 허용. 식별자(변수·함수·타입)는 영어.
 - 비밀값은 커밋 금지. 환경변수/시크릿으로 관리.
 

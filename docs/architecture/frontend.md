@@ -23,7 +23,7 @@ named 폴더 아키텍처(FSD 등)를 그대로 베끼지 않고, 배민·Money 
 ## 폴더 구조
 
 ```
-frontend/
+platform/arena/
 ├─ app/                          # 라우팅 (얇게)
 │  ├─ layout.tsx                 # 루트 레이아웃 + Navbar + 폰트 변수 주입
 │  ├─ globals.css                # 디자인 토큰(CSS 변수) + base + focus-visible
@@ -42,7 +42,7 @@ frontend/
 ├─ entities/                     # 도메인 모듈
 │  ├─ problem/
 │  │  ├─ model.ts                # Problem 타입·도메인 로직(acceptanceRate 등)
-│  │  ├─ api.ts                  # Repository (현재 mock, 이후 Backend API)
+│  │  ├─ api.ts                  # Repository (hub API fetch — @/shared/api/hub)
 │  │  ├─ use-problem-solving.ts  # ViewModel (에디터·채점 상태 훅)
 │  │  ├─ ui/DifficultyBadge.tsx  # 도메인 전용 UI (난이도 뱃지)
 │  │  └─ ui/AiBadge.tsx          # AI 생성 표식(전역 통일)
@@ -51,11 +51,14 @@ frontend/
 │     ├─ api.ts
 │     └─ ui/StatusBadge.tsx      # 도메인 전용 UI (채점 상태 뱃지)
 ├─ shared/
-│  └─ ui/                        # 도메인 무관 공용 (Navbar, ThemeToggle)
+│  ├─ ui/                        # 도메인 무관 공용 (Navbar, ThemeToggle)
+│  └─ api/hub.ts                 # hub(백엔드) 접근 공용 fetch 헬퍼
 └─ ...config
 ```
 
-> **의존성 규칙은 ESLint로 강제**한다(`import/no-restricted-paths`, [`.eslintrc.json`](../../frontend/.eslintrc.json)). 도메인 전용 UI(난이도·상태 뱃지)는 `shared`가 아니라 해당 `entities`에 둔다 — `shared`가 `entities`를 참조하면 역방향 위반이라 lint 에러가 난다.
+> **타입은 `@cotejs/contracts` 공유**(짝 A). `entities/*/model.ts`는 계약 패키지에서 재수출만 한다([ADR-0005](../decisions/0005-backend-language-and-type-sharing.md)).
+
+> **의존성 규칙은 ESLint로 강제**한다(`import/no-restricted-paths`, [`.eslintrc.json`](../../platform/arena/.eslintrc.json)). 도메인 전용 UI(난이도·상태 뱃지)는 `shared`가 아니라 해당 `entities`에 둔다 — `shared`가 `entities`를 참조하면 역방향 위반이라 lint 에러가 난다.
 
 > **비주얼/디자인 토큰·서체·모션·접근성 규칙은 [디자인 시스템 문서](frontend-design-system.md)에 분리**했다. 색은 `globals.css`의 CSS 변수가 단일 진실원이고, 컴포넌트는 `bg-surface`·`text-muted`·`border-border` 같은 시맨틱 토큰만 쓴다(`dark:` 이중 표기 금지).
 
@@ -72,5 +75,6 @@ frontend/
 
 ## 데이터 연동
 
-- POC: `entities/*/api.ts`가 목업 반환(비동기).
-- 이후: 같은 `api.ts`를 Backend API(Kotlin) 호출로 교체. 뷰·뷰모델은 무변경(Repository 경계 덕분).
+- `entities/*/api.ts`(Repository)가 `@/shared/api/hub`로 **hub(NestJS) API를 서버에서 fetch**한다. mock → hub 교체가 이 파일들에서만 일어났고 뷰·뷰모델은 무변경(Repository 경계 덕분).
+- 응답 타입은 `@cotejs/contracts`의 `Problem`/`Submission` — hub와 동일 계약(짝 A).
+- 단, 에디터의 실행/제출 채점은 아직 client mock(`use-problem-solving.ts`) — 실제 채점은 Judge 마일스톤.
