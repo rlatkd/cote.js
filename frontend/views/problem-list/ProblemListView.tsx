@@ -2,13 +2,14 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Search, Sparkles } from "lucide-react";
+import { Search } from "lucide-react";
 import {
   acceptanceRate,
   type Difficulty,
   type Problem,
 } from "@/entities/problem/model";
 import DifficultyBadge from "@/entities/problem/ui/DifficultyBadge";
+import AiBadge from "@/entities/problem/ui/AiBadge";
 
 const DIFFICULTIES: (Difficulty | "전체")[] = [
   "전체",
@@ -38,112 +39,114 @@ export default function ProblemListView({ problems }: { problems: Problem[] }) {
   }, [problems, query, difficulty, aiOnly]);
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-8">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight">문제</h1>
-        <p className="mt-1 text-sm text-zinc-500">
-          {filtered.length}
-          {filtered.length !== problems.length && ` / ${problems.length}`}개
+    <main className="mx-auto max-w-6xl px-4 py-10">
+      <header className="mb-8">
+        <h1 className="text-3xl font-extrabold tracking-tight">문제</h1>
+        <p className="mono-label mt-2">
+          <span className="text-brand">{filtered.length}</span>
+          {filtered.length !== problems.length && ` / ${problems.length}`} INDEXED
         </p>
-      </div>
+      </header>
 
       {/* 필터 바 */}
-      <div className="mb-4 flex flex-wrap items-center gap-2">
+      <div className="mb-5 flex flex-wrap items-center gap-2">
         <div className="relative">
           <Search
-            size={15}
-            className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-400"
+            size={14}
+            className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-faint"
           />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="제목·번호·유형 검색"
-            className="w-56 rounded-lg border border-zinc-300 bg-white py-1.5 pl-8 pr-3 text-sm outline-none transition focus:border-brand dark:border-zinc-700 dark:bg-zinc-900"
+            placeholder="search"
+            className="w-56 border border-border bg-surface py-1.5 pl-8 pr-3 font-mono text-[13px] outline-none transition placeholder:text-faint focus:border-brand"
           />
         </div>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-px bg-border">
           {DIFFICULTIES.map((d) => (
             <button
               key={d}
               onClick={() => setDifficulty(d)}
-              className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
+              className={`px-3 py-1.5 font-mono text-[13px] transition-colors ${
                 difficulty === d
-                  ? "bg-brand text-white"
-                  : "text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+                  ? "bg-brand text-brand-ink"
+                  : "bg-surface text-muted hover:text-fg"
               }`}
             >
-              {d}
+              {d === "전체" ? "all" : d}
             </button>
           ))}
         </div>
 
         <button
           onClick={() => setAiOnly((v) => !v)}
-          className={`inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-sm font-medium transition ${
+          aria-pressed={aiOnly}
+          className={`border px-3 py-1.5 font-mono text-[13px] uppercase tracking-wide transition-colors ${
             aiOnly
-              ? "bg-brand/10 text-brand"
-              : "text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+              ? "border-brand text-brand"
+              : "border-border text-muted hover:text-fg"
           }`}
         >
-          <Sparkles size={13} /> AI 생성만
+          AI only
         </button>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800">
-        <table className="w-full text-sm">
-          <thead className="bg-zinc-50 text-left text-xs text-zinc-500 dark:bg-zinc-900">
-            <tr>
-              <th className="px-4 py-3 font-medium">번호</th>
-              <th className="px-4 py-3 font-medium">제목</th>
-              <th className="hidden px-4 py-3 font-medium md:table-cell">유형</th>
-              <th className="px-4 py-3 font-medium">난이도</th>
-              <th className="hidden px-4 py-3 text-right font-medium sm:table-cell">
-                제출
-              </th>
-              <th className="px-4 py-3 text-right font-medium">정답률</th>
+      {/* 계기 테이블 */}
+      <div className="border-y border-border">
+        <table className="w-full">
+          <thead>
+            <tr className="border-b border-border [&>th]:px-3 [&>th]:py-2.5 [&>th]:text-left [&>th]:font-mono [&>th]:text-[11px] [&>th]:font-medium [&>th]:uppercase [&>th]:tracking-[0.14em] [&>th]:text-muted">
+              <th className="!w-16">ID</th>
+              <th>TITLE</th>
+              <th className="hidden md:table-cell">TAGS</th>
+              <th className="!w-36">TIER</th>
+              <th className="hidden !text-right sm:table-cell">SUB</th>
+              <th className="!w-20 !text-right">AC</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
+          <tbody>
             {filtered.map((p) => (
               <tr
                 key={p.id}
-                className="transition hover:bg-zinc-50 dark:hover:bg-zinc-900/60"
+                className="group border-b border-border transition-colors hover:bg-elevated"
               >
-                <td className="px-4 py-3 font-mono text-zinc-500">{p.id}</td>
-                <td className="px-4 py-3">
+                <td className="px-3 py-3 font-mono text-sm tabular-nums text-faint transition-colors group-hover:text-brand">
+                  {p.id}
+                </td>
+                <td className="px-3 py-3">
                   <Link
                     href={`/problems/${p.id}`}
-                    className="font-medium hover:text-brand"
+                    className="font-medium transition-colors hover:text-brand"
                   >
                     {p.title}
                   </Link>
                   {p.aiGenerated && (
-                    <span className="ml-2 inline-flex items-center gap-0.5 rounded bg-brand/10 px-1.5 py-0.5 text-[10px] font-medium text-brand">
-                      <Sparkles size={9} /> AI
+                    <span className="ml-2 align-middle">
+                      <AiBadge size="xs" />
                     </span>
                   )}
                 </td>
-                <td className="hidden px-4 py-3 md:table-cell">
+                <td className="hidden px-3 py-3 md:table-cell">
                   <div className="flex flex-wrap gap-1">
                     {p.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
+                        className="border border-border px-1.5 py-0.5 font-mono text-[10px] text-muted"
                       >
                         {tag}
                       </span>
                     ))}
                   </div>
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-3 py-3">
                   <DifficultyBadge difficulty={p.difficulty} tier={p.tier} />
                 </td>
-                <td className="hidden px-4 py-3 text-right font-mono text-zinc-500 sm:table-cell">
+                <td className="hidden px-3 py-3 text-right font-mono text-sm tabular-nums text-muted sm:table-cell">
                   {p.submissionCount.toLocaleString()}
                 </td>
-                <td className="px-4 py-3 text-right">
-                  <span className="font-medium">{acceptanceRate(p)}%</span>
+                <td className="px-3 py-3 text-right font-mono text-sm font-medium tabular-nums">
+                  {acceptanceRate(p)}%
                 </td>
               </tr>
             ))}
@@ -151,7 +154,7 @@ export default function ProblemListView({ problems }: { problems: Problem[] }) {
               <tr>
                 <td
                   colSpan={6}
-                  className="px-4 py-10 text-center text-sm text-zinc-400"
+                  className="px-3 py-14 text-center font-mono text-sm text-faint"
                 >
                   조건에 맞는 문제가 없습니다.
                 </td>

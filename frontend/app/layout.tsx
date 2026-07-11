@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { pretendard, jetbrainsMono } from "./fonts";
 import Navbar from "@/shared/ui/Navbar";
 
 export const metadata: Metadata = {
@@ -29,7 +30,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko" suppressHydrationWarning>
+    <html
+      lang="ko"
+      suppressHydrationWarning
+      className={`${pretendard.variable} ${jetbrainsMono.variable}`}
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>

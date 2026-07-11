@@ -2,13 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Code2 } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 
 const links = [
-  { href: "/", label: "홈" },
-  { href: "/problems", label: "문제" },
-  { href: "/status", label: "채점 현황" },
+  { href: "/", label: "home" },
+  { href: "/problems", label: "problems" },
+  { href: "/status", label: "status" },
 ];
 
 export default function Navbar() {
@@ -20,39 +19,46 @@ export default function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b border-zinc-200 bg-white/80 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/80">
-      <div className="mx-auto flex h-14 max-w-6xl items-center gap-6 px-4">
-        <Link href="/" className="flex items-center gap-2 font-bold">
-          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-brand text-white">
-            <Code2 size={17} />
-          </span>
-          <span className="text-[15px] tracking-tight">
-            Cote<span className="text-brand">JS</span>
-          </span>
+    <header className="sticky top-0 z-40 border-b border-border bg-bg/80 backdrop-blur">
+      <div className="mx-auto flex h-14 max-w-6xl items-center gap-8 px-4">
+        {/* 터미널 워드마크 */}
+        <Link
+          href="/"
+          className="flex items-center font-mono text-sm font-bold tracking-tight"
+        >
+          <span className="text-fg">cote</span>
+          <span className="text-brand">.js</span>
+          <span className="ml-0.5 h-4 w-[7px] animate-blink bg-brand" aria-hidden />
         </Link>
 
         <nav className="flex items-center gap-1">
-          {links.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
-                isActive(l.href)
-                  ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100"
-                  : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-              }`}
-            >
-              {l.label}
-            </Link>
-          ))}
+          {links.map((l) => {
+            const active = isActive(l.href);
+            return (
+              <Link
+                key={l.href}
+                href={l.href}
+                aria-current={active ? "page" : undefined}
+                className={`relative px-2.5 py-1.5 font-mono text-[13px] tracking-tight transition-colors ${
+                  active ? "text-fg" : "text-muted hover:text-fg"
+                }`}
+              >
+                <span className="text-faint">/</span>
+                {l.label}
+                {active && (
+                  <span className="absolute inset-x-2.5 -bottom-[13px] h-[2px] bg-brand" />
+                )}
+              </Link>
+            );
+          })}
         </nav>
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-1.5">
           <ThemeToggle />
-          <button className="rounded-lg px-3 py-1.5 text-sm font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100">
+          <button className="px-3 py-1.5 font-mono text-[13px] text-muted transition-colors hover:text-fg">
             로그인
           </button>
-          <button className="rounded-lg bg-brand px-3.5 py-1.5 text-sm font-semibold text-white transition hover:bg-brand-hover">
+          <button className="bg-brand px-3.5 py-1.5 font-mono text-[13px] font-semibold text-brand-ink transition-colors hover:bg-brand-hover">
             회원가입
           </button>
         </div>

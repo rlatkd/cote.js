@@ -1,30 +1,25 @@
 import type { JudgeResult } from "../model";
 
-const styles: Record<JudgeResult, string> = {
-  "맞았습니다":
-    "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400",
-  "틀렸습니다":
-    "bg-rose-100 text-rose-700 dark:bg-rose-950/50 dark:text-rose-400",
-  "시간 초과":
-    "bg-orange-100 text-orange-700 dark:bg-orange-950/50 dark:text-orange-400",
-  "메모리 초과":
-    "bg-orange-100 text-orange-700 dark:bg-orange-950/50 dark:text-orange-400",
-  "런타임 에러":
-    "bg-purple-100 text-purple-700 dark:bg-purple-950/50 dark:text-purple-400",
-  "컴파일 에러":
-    "bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300",
-  "채점 중":
-    "bg-blue-100 text-blue-700 dark:bg-blue-950/50 dark:text-blue-400",
+// "Instrument" 컨셉 — 색 알약 대신 상태 도트 + 모노 라벨.
+// 색(결과 의미)은 유지하되 브랜드 앰버와 겹치지 않는 계열로.
+const dotColor: Record<JudgeResult, string> = {
+  맞았습니다: "bg-emerald-500",
+  틀렸습니다: "bg-rose-500",
+  "시간 초과": "bg-amber-400",
+  "메모리 초과": "bg-amber-400",
+  "런타임 에러": "bg-violet-400",
+  "컴파일 에러": "bg-zinc-500",
+  "채점 중": "bg-sky-400",
 };
 
 export default function StatusBadge({ result }: { result: JudgeResult }) {
   return (
-    <span
-      className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-semibold ${styles[result]}`}
-    >
-      {result === "채점 중" && (
-        <span className="mr-1.5 inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-current" />
-      )}
+    <span className="inline-flex items-center gap-1.5 font-mono text-[11px] tracking-wide text-fg/85">
+      <span
+        className={`h-1.5 w-1.5 ${dotColor[result]} ${
+          result === "채점 중" ? "animate-pulse" : ""
+        }`}
+      />
       {result}
     </span>
   );

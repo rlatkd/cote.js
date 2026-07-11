@@ -8,7 +8,14 @@
       "WebFetch(domain:techblog.woowahan.com)",
       "WebFetch(domain:artsy.github.io)",
       "WebFetch(domain:global.moneyforward-dev.jp)",
-      "PowerShell(Set-Location \"c:\\\\Users\\\\tkdgn\\\\Desktop\\\\사이드\\\\cotejs\\\\frontend\"; $env:PORT=3000; npm run dev)"
+      "PowerShell(Set-Location \"c:\\\\Users\\\\tkdgn\\\\Desktop\\\\사이드\\\\cotejs\\\\frontend\"; $env:PORT=3000; npm run dev)",
+      "Bash(pnpm -v)",
+      "Bash(pnpm dev *)",
+      "Bash(pnpm install *)",
+      "Bash(timeout 25 pnpm dev)",
+      "Bash(pnpm build *)",
+      "Bash(cat /tmp/cotejs-verify.log)",
+      "Read(//private/tmp/**)"
     ]
   }
 }

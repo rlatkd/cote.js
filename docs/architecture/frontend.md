@@ -25,7 +25,10 @@ named 폴더 아키텍처(FSD 등)를 그대로 베끼지 않고, 배민·Money 
 ```
 frontend/
 ├─ app/                          # 라우팅 (얇게)
-│  ├─ layout.tsx                 # 루트 레이아웃 + Navbar
+│  ├─ layout.tsx                 # 루트 레이아웃 + Navbar + 폰트 변수 주입
+│  ├─ globals.css                # 디자인 토큰(CSS 변수) + base + focus-visible
+│  ├─ fonts.ts                   # next/font (Pretendard + JetBrains Mono)
+│  ├─ fonts/                     # 셀프 호스팅 폰트 파일(PretendardVariable.woff2)
 │  ├─ page.tsx                   # 홈 → views/home
 │  ├─ problems/
 │  │  ├─ page.tsx                # 목록 → views/problem-list
@@ -41,7 +44,8 @@ frontend/
 │  │  ├─ model.ts                # Problem 타입·도메인 로직(acceptanceRate 등)
 │  │  ├─ api.ts                  # Repository (현재 mock, 이후 Backend API)
 │  │  ├─ use-problem-solving.ts  # ViewModel (에디터·채점 상태 훅)
-│  │  └─ ui/DifficultyBadge.tsx  # 도메인 전용 UI (난이도 뱃지)
+│  │  ├─ ui/DifficultyBadge.tsx  # 도메인 전용 UI (난이도 뱃지)
+│  │  └─ ui/AiBadge.tsx          # AI 생성 표식(전역 통일)
 │  └─ submission/
 │     ├─ model.ts
 │     ├─ api.ts
@@ -52,6 +56,8 @@ frontend/
 ```
 
 > **의존성 규칙은 ESLint로 강제**한다(`import/no-restricted-paths`, [`.eslintrc.json`](../../frontend/.eslintrc.json)). 도메인 전용 UI(난이도·상태 뱃지)는 `shared`가 아니라 해당 `entities`에 둔다 — `shared`가 `entities`를 참조하면 역방향 위반이라 lint 에러가 난다.
+
+> **비주얼/디자인 토큰·서체·모션·접근성 규칙은 [디자인 시스템 문서](frontend-design-system.md)에 분리**했다. 색은 `globals.css`의 CSS 변수가 단일 진실원이고, 컴포넌트는 `bg-surface`·`text-muted`·`border-border` 같은 시맨틱 토큰만 쓴다(`dark:` 이중 표기 금지).
 
 ## 데이터 흐름 (RSC 방침)
 

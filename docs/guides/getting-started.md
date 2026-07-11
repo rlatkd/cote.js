@@ -5,19 +5,22 @@
 ## 사전 요구
 
 - Node.js 18.17+ (권장 20+ / 개발 환경 22)
-- npm
+- pnpm 10+ (개발 환경 11)
 
 ## 프론트엔드 POC 실행
 
 ```bash
 cd frontend
-npm install
-npm run dev
+pnpm install
+pnpm dev          # 서버가 뜨면 자동으로 브라우저를 연다(opener.js)
+# pnpm dev:no-open  # 브라우저 자동 오픈 없이
 ```
 
 - 개발 서버: http://localhost:3000
-- 데이터: `frontend/lib/mockData.ts` 목업 (백엔드 불필요)
+- 데이터: `entities/*/api.ts` 목업 (백엔드 불필요)
 - 코드 에디터(Monaco)는 기본 설정상 CDN에서 로드되므로 최초 실행 시 인터넷 연결 필요.
+
+> **pnpm 빌드 스크립트 승인**: 네이티브 의존성 `unrs-resolver`가 postinstall 빌드를 필요로 한다. [`pnpm-workspace.yaml`](../../frontend/pnpm-workspace.yaml)의 `allowBuilds.unrs-resolver: true`로 이미 승인돼 있다(값이 비어 있으면 `ERR_PNPM_IGNORED_BUILDS`로 `pnpm dev`가 실패).
 
 ## 페이지
 

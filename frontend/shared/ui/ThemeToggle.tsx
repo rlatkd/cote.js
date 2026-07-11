@@ -30,7 +30,7 @@ export default function ThemeToggle() {
     <button
       onClick={toggle}
       aria-label="테마 전환"
-      className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+      className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted transition hover:bg-elevated hover:text-fg"
     >
       {dark ? <Sun size={18} /> : <Moon size={18} />}
     </button>

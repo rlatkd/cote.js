@@ -7,7 +7,8 @@
 | 문서 | 내용 |
 |---|---|
 | [system-overview.md](system-overview.md) | 전체 시스템 구성·서비스·데이터 흐름 |
-| [frontend.md](frontend.md) | 프론트엔드 내부 아키텍처 (Proposed) |
+| [frontend.md](frontend.md) | 프론트엔드 내부 아키텍처 (Active) |
+| [frontend-design-system.md](frontend-design-system.md) | 프론트 디자인 시스템 — 색 토큰·서체·표면 위계·모션·접근성 (Active) |
 | [_template.md](_template.md) | 서비스 아키텍처 문서 템플릿 |
 
 ## 방침
